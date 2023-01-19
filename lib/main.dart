@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/users.dart';
+import 'package:flutter_application_1/routes/app_routes.dart';
+import 'package:flutter_application_1/views/user_form.dart';
 import 'package:flutter_application_1/views/user_list.dart';
 import 'package:provider/provider.dart';
 
@@ -13,17 +15,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (ctx) => Users(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Users(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: UserList(),
+        routes: {
+          AppRoutes.home: (_) => UserList(),
+          AppRoutes.userForm: (ctx) => UserForm()
+        },
       ),
     );
   }
 }
-
-// https://youtu.be/ViahqKZzZ7Y?list=LL&t=1717 
