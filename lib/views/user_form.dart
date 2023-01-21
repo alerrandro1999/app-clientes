@@ -3,8 +3,16 @@ import 'package:flutter_application_1/provider/users.dart';
 import 'package:flutter_application_1/user.dart';
 import 'package:provider/provider.dart';
 
-class UserForm extends StatelessWidget {
+class UserForm extends StatefulWidget {
+  @override
+  _UserFormState createState() => _UserFormState();
+}
+
+class _UserFormState extends State<UserForm> {
   final _form = GlobalKey<FormState>();
+
+  bool isLoading = false;
+
   final Map<String, String> _formData = {};
   void _loadFormData(user) {
     if (user != null) {
@@ -28,10 +36,14 @@ class UserForm extends StatelessWidget {
         title: const Text('Formulário de Usuário'),
         actions: <Widget>[
           IconButton(
-            onPressed: () {
+            onPressed: () async {
               _form.currentState!.save();
 
-              Provider.of<Users>(context, listen: false).put(
+              setState(() {
+                isLoading = true;
+              });
+
+              await Provider.of<Users>(context, listen: false).put(
                 User(
                   id: _formData['id'].toString(),
                   name: _formData['name'].toString(),
@@ -39,13 +51,21 @@ class UserForm extends StatelessWidget {
                   avatarUrl: _formData['avatarUrl'].toString(),
                 ),
               );
+
+               setState(() {
+                isLoading = false;
+              });
+
+
               Navigator.of(context).pop();
             },
             icon: const Icon(Icons.save),
           )
         ],
       ),
-      body: Padding(
+      body: isLoading
+       ? const Center(child: CircularProgressIndicator()) 
+       : Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
           key: _form,
