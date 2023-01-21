@@ -24,10 +24,10 @@ class Users with ChangeNotifier {
       return;
     }
 
-    if (user.id.trim().isNotEmpty &&
+    if (user.id.toString().trim().isNotEmpty &&
         _items.containsKey(user.id)) {
       _items.update(
-        user.id,
+        user.id.toString(),
         (_) => User(
           id: user.id,
           name: user.name,
